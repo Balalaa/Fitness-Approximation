@@ -1,7 +1,8 @@
 # Fitness-Approximation
 
 This project was created in the process of writing a paper("Is it worth to approximate fitness function by machine learning")
-abstract : It is usual to need an approximate model in evolutionary
+## Abstract  
+It is usual to need an approximate model in evolutionary
 computation when fitness function is deemed to be abstract or
 expected to have a long computation time. In these cases, research
 on possibility of fitness approximation should proceed before
