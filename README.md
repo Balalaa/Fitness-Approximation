@@ -14,8 +14,8 @@ sizes.
 
 ## Files
 세 가지 기계 학습 알고리즘을 사용해서 모델을 만들고, 해당 모델로 적합도를 근사
-### DNN의 경우 Tensorflow로 구현
-### LR, SVR의 경우 WEKA로 구현
+DNN의 경우 Tensorflow로 구현 
+LR, SVR의 경우 WEKA로 구현
 
 ## How to use code
 
