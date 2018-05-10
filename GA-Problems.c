@@ -1,3 +1,12 @@
+/*
+	유전 알고리즘의 적합도 함수를 근사하는 논문을 작성하는 과정에서
+	기존의 GA-Problems.c를 수정한 것으로 기존 코드와 다음이 다르다.
+	* landscape가 같아야 했기 때문에, 파일 형태로 저장되어 있는 landscape를 읽는 부분
+	* 적합도를 텐서플로우로 만든 딥러닝 모델을 통해 얻는 부분  
+	* 적합도를 웨카로 만든 머신러닝 모델(Support vector Regression)을 통해 얻는 부분
+	* (LR 모델을 로드하는 과정에서 에러를 수정하지 못해, 가중치를 곱해 적합도를 구해서 LR의 경우에는 
+	모델을 로드하지 않았다.)
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

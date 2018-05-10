@@ -46,7 +46,7 @@ def main(argv):
     test_path = FLAGS['path'] + '/' +  FLAGS['file_name']
     size = int(os.path.splitext(FLAGS['file_name'])[0].split('_')[-1])
     (train_x, train_y), (test_x, test_y) = load_data(train_path, test_path)
-    # load train dataset, test datase]]=\]=-------------------00ppq                 azssxd7
+    # load train dataset, test dataset
     print(FLAGS['file_name'])
     my_feature_columns = []
     for key in train_x.keys():
@@ -100,7 +100,8 @@ def main(argv):
 
 if __name__ == "__main__":
     tf.set_random_seed(486)
-    for (path, dir, files) in os.walk("/home/ubuntu/speech/GA-DNN-SVR-LR/fitness"):
+    #for (path, dir, files) in os.walk("path"):
+    for (path, dir, files) in os.walk("/home/dong/바탕화면/dataset"):
         for filename in files:
             FLAGS = {'batch_size': 10, 'train_steps': 10000, 'file_name': filename, 'path': path}
             main(FLAGS)
