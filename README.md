@@ -20,3 +20,11 @@ sizes.
 ## How to use code
 
 ```markdown
+gcc -o GA GA-Problems.c
+./GA nk 20 temp RANDOM 2
+# nk - type of problem
+# temp - File name, It has best solutions's fitness
+# 2 - NK_K
+# 20 - NK_N
+
+

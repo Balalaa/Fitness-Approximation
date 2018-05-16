@@ -6,7 +6,7 @@
 	* 적합도를 웨카로 만든 머신러닝 모델(Support vector Regression)을 통해 얻는 부분
 	* (LR 모델을 로드하는 과정에서 에러를 수정하지 못해, 가중치를 곱해 적합도를 구해서 LR의 경우에는 
 	모델을 로드하지 않았다.)
-	* nk_create() fitnessCheckForNK, fitnessCheck 등의 코드가 달라졌다. 기존의 Landscape를 불러와야 하는 부분이 존재하기 때문
+	* nk_create(), fitnessCheckForNK, fitnessCheck 등의 코드가 달라졌다. 기존의 Landscape를 불러와야 하는 부분이 존재하기 때문
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -108,9 +108,8 @@ void nk_create(NK* landscape)
 	}
 
 
-	/*
 	char str[200];
-   	sprintf(str, "./land20-400/nk%d_%d",NK_N,NK_K);
+   	sprintf(str, "../landscape/land%d_%d",NK_N,NK_K);
     FILE* pFile = fopen(str,"r");
 	
     for(int a=0;a<NK_N;a++)
@@ -124,14 +123,13 @@ void nk_create(NK* landscape)
             fscanf(pFile,"%d",&landscape->Rand[a][b]);
     }
     fclose(pFile);
-	*/
 
 	/*
 	 * fitness approximation을 위해 추가된 부분 
 	 * landscape가 존재하는 적절한 경로를 설정해야 한다.
 	 * landscape는 GA_Problems를 통해 얻을 수 있다.
     */
-	
+	/*	
 	for(i=0;i<NK_N;i++)
 	{
 		for(j=0;j<pow*2;j++)
@@ -157,6 +155,7 @@ void nk_create(NK* landscape)
 			}
 		}
 	}
+	*/
     /* 파이썬 코드를 돌리기 위해 기존에 DNN 모델을 학습시킬 때 필요했던
     landscape를 불러오기 위해 주석 처리한 부분 */
     /* 만약 기존의 landscape를 필요하지 않고, 새로 만들어도 된다면 주석 부분을 적절히 
@@ -688,9 +687,9 @@ int main(int argc,char** argv)
         {
             fitnessCheckForNK(&generation[i],landscape);
 	        /* NK_LANDSCAPE를 이용한 적합도 계산 함수 호출 */
+			/*
             if(i==0)
 		    {
-				printf("123\n");
 			    FILE* fpp;
 			    char resultFile[200];
 			    sprintf(resultFile,"land%d_%d",NK_N,NK_K);
@@ -718,6 +717,7 @@ int main(int argc,char** argv)
 			    }
 				fclose(fpp);
 		    }
+			*/
 			/* 첫 번째 NK_Landscape를 nk10_2의 형태로 파일을 만들고 저장 */
         	
 		}
