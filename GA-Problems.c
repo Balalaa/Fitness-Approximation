@@ -90,7 +90,7 @@ void nk_create(NK* landscape)
 
     FILE* pFile = NULL;
     char str[200];
-    sprintf(str, "./land20-400/nk%d_2",GENES);
+    sprintf(str, "../landscape/land%d_7",GENES);
     /*
 	landscape가 존재하는 적절한 경로를 설정해야 한다.
 	landscape는 GA_Problems를 통해 얻을 수 있다.
@@ -511,7 +511,7 @@ void fitnessCheckForNK(Fitness* generation,NK* landscape)
      * 파이썬에서 c를 호출하기 위해 파일 입출력 부분을 삽입
      * fitness를 구하는 부분을 텐서플로우를 통해 얻는다.
      */
-    
+    /* --------------------------------------------------- */
 	char str[INDIVIDUAL][500];
     char toParser[500];
     char everyStr[10000];
@@ -525,11 +525,12 @@ void fitnessCheckForNK(Fitness* generation,NK* landscape)
     }
     else
     {
-		for(int i=0;i<INDIVIDUAL;i++)
-		{
-			generation->fit[i]=LR_royal_nk(i);
-		}
-		/*
+        
+		//for(int i=0;i<INDIVIDUAL;i++)
+		//{
+			//generation->fit[i]=LR_royal_nk(i);
+		//}
+        
 	    for(int i=0;i<INDIVIDUAL;i++)
 	    {
             for(int j=0;j<GENES;j++)
@@ -544,21 +545,25 @@ void fitnessCheckForNK(Fitness* generation,NK* landscape)
             strcat(everyStr, str[i]);
         }
 
-        sprintf(toParser, "python3 fitness.py --solution %s --type %s --genes %d",everyStr,PROBLEM,GENES);
-		*/
-        /* 텐서플로우 모델을 통해 적합도를 얻기 위한 시스템 콜 */
-        //sprintf(toParser, "java fitness %s %s %d",everyStr,PROBLEM,GENES);
-        /* 웨카 모델을 통해 적합도를 얻기 위한 시스템 콜 */
-        /*
+        // sprintf(toParser, "python3 fitness.py --solution %s --type %s --genes %d",everyStr,PROBLEM,GENES);
+        // 입력 파일은 csv형태로, 다음과 같은 형태이다.
+        // a1,a2,a3,fit
+        // 0,1,1,2
+        // 1,1,1,3
+        // 텐서플로우 모델을 통해 적합도를 얻기 위한 시스템 콜 
+        sprintf(toParser, "java fitness %s %s %d",everyStr,PROBLEM,GENES);
+        // 입력 파일은 텐서플로우 모델을 사용했을 때와 동일
+        // 하지만 프로그램을 수행하기 전에 자바 파일을 컴파일해서
+        // fitness.class 파일을 만들어야 한다. 
+        // 웨카 모델을 통해 적합도를 얻기 위한 시스템 콜 
 		system(toParser);
+        
         FILE* fp=fopen("result","r");
         for(int i=0;i<INDIVIDUAL;i++)
         {
             fscanf(fp,"%lf",&generation->fit[i]);
-            printf("%lf\n",generation->fit[i]);
         }
         fclose(fp);
-		*/
     }
 	
     for(int i=0;i<INDIVIDUAL;i++)
@@ -571,8 +576,8 @@ void fitnessCheckForNK(Fitness* generation,NK* landscape)
             indexOfIdeal=i;
         }
     }
-	
-	/*
+    /* ------------------------------------------------------------- */
+    /*
     for(int i=0;i<INDIVIDUAL;i++)
     {
         generation->fit[i]=nk_fitness(i,landscape);
@@ -584,7 +589,8 @@ void fitnessCheckForNK(Fitness* generation,NK* landscape)
 			indexOfIdeal=i;
 		}
     }
-	*/
+    */
+    /* ------------------------------------------------------------- */
 	generation->ideal=ideal;
 	generation->average=(double)sum/INDIVIDUAL;
 	generation->indexOfIdeal=indexOfIdeal;
@@ -640,13 +646,8 @@ int main(int argc,char** argv)
    	int i, j, n;
 	population=(int**)malloc(sizeof(int*)*INDIVIDUAL);
 	next_population=(int**)malloc(sizeof(int*)*INDIVIDUAL);
-	/*
-	randomArr=(int*)malloc(sizeof(int)*power(GENES));
-	int randOpt = rand() % GENES + 1;
-	for(i=0;i<power(GENES);i++)
-		randomArr[i] = rand() % GENES + 1;
-	*/
-	for(i=0;i<INDIVIDUAL;i++)
+	
+    for(i=0;i<INDIVIDUAL;i++)
 	{
 		population[i]=(int*)malloc(sizeof(int)*GENES);
 		next_population[i]=(int*)malloc(sizeof(int)*GENES);
@@ -711,8 +712,8 @@ int main(int argc,char** argv)
 
 		int k, l;
 		
-		printf("%d Generation: \n", i + 1);
-		k=ideal_individuo;
+		//printf("%d Generation: \n", i + 1);
+		//k=ideal_individuo;
 
 		//for (l = 0; l < GENES; l++)
 			//printf("%d ", population[k][l]);
@@ -819,7 +820,6 @@ int main(int argc,char** argv)
 	/* 파일에 결과를 출력 */
 	if(!strcmp(PROBLEM,"nk"))
         nk_free(landscape);
-	//free(randomArr);
 
     end = clock();
     //gap = (float)(end-start)/(CLOCKS_PER_SEC);

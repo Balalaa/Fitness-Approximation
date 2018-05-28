@@ -22,9 +22,9 @@ public class fitness{
             String genes_string = args[2];
             int numOfGenes = Integer.parseInt(genes_string);
 
-            String model_path = "./model/SMOreg-";
-            model_path = model_path + problem + "-" + genes_string + ".model";
-
+            String model_path = "../weka-model/svr-";
+            model_path = model_path + problem + genes_string + ".model";
+            
 			FileWriter arff = new FileWriter("data.arff");
             
             arff.write("@relation " + problem + genes_string + "\n"); 

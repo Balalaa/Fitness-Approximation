@@ -24,7 +24,7 @@ sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 sess.run(tf.local_variables_initializer())
 """
-model_path = './DNN_Models/train_' + FLAGS.type + '_' + str(FLAGS.genes)+ '/model'
+model_path = '../model_high_done/DNN_Models/' + FLAGS.type + str(FLAGS.genes) + '_7' + '/model'
 par_dir = os.path.split(model_path)[0]
 meta_file = '{}.meta'.format(model_path)
 ckpt_file = '{}/checkpoint'.format(par_dir)
@@ -36,7 +36,6 @@ graph = tf.get_default_graph()
 
 x_ = FLAGS.solution
 input_xx = x_.split('/')
-print("len(input_xx): ", len(input_xx))
 input_x = list()
 for i in range(0,len(input_xx)):
     for j in range(0,FLAGS.genes):

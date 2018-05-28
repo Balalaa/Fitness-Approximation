@@ -6,14 +6,15 @@ import os
 from dnn import Dnn
 
 DEVICE = 'GPU'
-EPOCH = 5000
+EPOCH = 50
 BATCH_SIZE = 100
 MODEL_PATH = './DNN_Models/'
 HNODES_NUM = [1024, 1024, 512]
 
 if __name__ == '__main__':
-    
-    for (path, dir, files) in os.walk("/home/dong/dong/over200/"):
+   
+    #for (path,dir,files) in os.walk("path"):
+    for (path, dir, files) in os.walk("/home/dong/dataset"):
         for filename in files:
             my_dnn = Dnn()
             my_dnn.set_device(DEVICE)
