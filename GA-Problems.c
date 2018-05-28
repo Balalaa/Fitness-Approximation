@@ -97,21 +97,8 @@ void nk_create(NK* landscape)
 
 	else if(strcmp(TYPE,"NEXTDOOR")==0)
 		landscape->epi=NEXTDOOR;
-<<<<<<< HEAD:GA-Problems.c
-
-    FILE* pFile = NULL;
-    char str[200];
-    sprintf(str, "../landscape/land%d_7",GENES);
-    /*
-	landscape가 존재하는 적절한 경로를 설정해야 한다.
-	landscape는 GA_Problems를 통해 얻을 수 있다.
-    */     
-    pFile = fopen(str,"r");
-
-=======
-    
->>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
-	landscape->Rand=(int**)malloc(sizeof(int*)*NK_N);
+	
+    landscape->Rand=(int**)malloc(sizeof(int*)*NK_N);
 	landscape->land=(double**)malloc(sizeof(double*)*NK_N);
 
 	for(i=0;i<NK_N;i++)
@@ -119,7 +106,6 @@ void nk_create(NK* landscape)
 		landscape->land[i]=(double*)malloc(sizeof(double)*pow*2);
 		landscape->Rand[i]=(int*)malloc(sizeof(int)*NK_K);
 	}
-
 
 	char str[200];
    	sprintf(str, "../landscape/land%d_%d",NK_N,NK_K);
@@ -557,20 +543,13 @@ void fitnessCheckForNK(Fitness* generation,NK* landscape)
 	/* 마지막 세대일 경우, 적합도를 기존의 방법으로 구해야 했다. */
     else
     {
-<<<<<<< HEAD:GA-Problems.c
         
 		//for(int i=0;i<INDIVIDUAL;i++)
 		//{
 			//generation->fit[i]=LR_royal_nk(i);
 		//}
         
-=======
 		/*
-		for(int i=0;i<INDIVIDUAL;i++)
-			generation->fit[i]=LR_royal_nk(i);
-		*/
-		/*
->>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
 	    for(int i=0;i<INDIVIDUAL;i++)
 	    {
             for(int j=0;j<GENES;j++)
@@ -604,65 +583,36 @@ void fitnessCheckForNK(Fitness* generation,NK* landscape)
             fscanf(fp,"%lf",&generation->fit[i]);
         }
         fclose(fp);
-<<<<<<< HEAD:GA-Problems.c
-    }
-=======
-		
->>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
 	
     	for(int i=0;i<INDIVIDUAL;i++)
     	{
         	sum+=generation->fit[i];
         
-<<<<<<< HEAD:GA-Problems.c
-        if(generation->fit[i]>ideal)
-        {
-            ideal=generation->fit[i];
-            indexOfIdeal=i;
+            if(generation->fit[i]>ideal)
+            {
+                ideal=generation->fit[i];
+                indexOfIdeal=i;
+            }
         }
+        */
+        /* ------------------------------------------------------------- */
+        for(int i=0;i<INDIVIDUAL;i++)
+        {
+            generation->fit[i]=nk_fitness(i,landscape);
+		    sum+=generation->fit[i];
+
+		    if(generation->fit[i]>ideal)
+		    {
+			    ideal=generation->fit[i];
+			    indexOfIdeal=i;
+		    }
+        }
+        /* ------------------------------------------------------------- */
+	    /* 윗 부분의 코드는 텐서플로우 모델을 통해 적합도를 구해야 했기 때문에
+	     * 필요했던 부분, 기존의 landscape를 통해 적합도를 구하는 것은 아래의 코드를
+	     * 수행하면 된다. 
+	     */
     }
-    /* ------------------------------------------------------------- */
-    /*
-    for(int i=0;i<INDIVIDUAL;i++)
-    {
-        generation->fit[i]=nk_fitness(i,landscape);
-		sum+=generation->fit[i];
-
-		if(generation->fit[i]>ideal)
-		{
-			ideal=generation->fit[i];
-			indexOfIdeal=i;
-		}
-    }
-    */
-    /* ------------------------------------------------------------- */
-=======
-        	if(generation->fit[i]>ideal)
-        	{
-            	ideal=generation->fit[i];
-            	indexOfIdeal=i;
-        	}
-    	}
-		*/
-
-		/* 윗 부분의 코드는 텐서플로우 모델을 통해 적합도를 구해야 했기 때문에
-	 	 * 필요했던 부분, 기존의 landscape를 통해 적합도를 구하는 것은 아래의 코드를
-	 	 * 수행하면 된다. 
-	 	 */
-
-    	for(int i=0;i<INDIVIDUAL;i++)
-    	{
-        	generation->fit[i]=nk_fitness(i,landscape);
-			sum+=generation->fit[i];
-
-			if(generation->fit[i]>ideal)
-			{
-				ideal=generation->fit[i];
-				indexOfIdeal=i;
-			}
-    	}
-	}
->>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
 	generation->ideal=ideal;
 	generation->average=(double)sum/INDIVIDUAL;
 	generation->indexOfIdeal=indexOfIdeal;
@@ -719,11 +669,7 @@ int main(int argc,char** argv)
 	population=(int**)malloc(sizeof(int*)*INDIVIDUAL);
 	next_population=(int**)malloc(sizeof(int*)*INDIVIDUAL);
 	
-<<<<<<< HEAD:GA-Problems.c
-    for(i=0;i<INDIVIDUAL;i++)
-=======
 	for(i=0;i<INDIVIDUAL;i++)
->>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
 	{
 		population[i]=(int*)malloc(sizeof(int)*GENES);
 		next_population[i]=(int*)malloc(sizeof(int)*GENES);
@@ -788,17 +734,10 @@ int main(int argc,char** argv)
 		double ideal_num = generation[i].ideal;
 
 		int k, l;
-<<<<<<< HEAD:GA-Problems.c
-		
-		//printf("%d Generation: \n", i + 1);
-		//k=ideal_individuo;
-=======
-	
-		/*
+        /*
 		printf("%d Generation: \n", i + 1);
 		k=ideal_individuo;
->>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
-
+	
 		for (l = 0; l < GENES; l++)
 			printf("%d ", population[k][l]);
 
@@ -905,14 +844,5 @@ int main(int argc,char** argv)
 	
 	if(!strcmp(PROBLEM,"nk"))
         nk_free(landscape);
-<<<<<<< HEAD:GA-Problems.c
-
-    end = clock();
-    //gap = (float)(end-start)/(CLOCKS_PER_SEC);
-    //FILE* timeFile = fopen("time.txt","a+");
-    //fprintf(timeFile,"%f 시간 소요, %s-%d 문제 \n",gap,PROBLEM,GENES);
-    //fclose(timeFile);
-
-=======
->>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
+    
 }
