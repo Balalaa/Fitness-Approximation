@@ -101,7 +101,11 @@ def main(argv):
 if __name__ == "__main__":
     tf.set_random_seed(486)
     #for (path, dir, files) in os.walk("path"):
+<<<<<<< HEAD
     for (path, dir, files) in os.walk("/home/dong/dataset"):
+=======
+    for (path, dir, files) in os.walk("/home/dong/바탕화면/dataset"):
+>>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b
         for filename in files:
             FLAGS = {'batch_size': 10, 'train_steps': 10000, 'file_name': filename, 'path': path}
             main(FLAGS)

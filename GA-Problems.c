@@ -1,3 +1,13 @@
+/*
+	유전 알고리즘의 적합도 함수를 근사하는 논문을 작성하는 과정에서
+	기존의 GA-Problems.c를 수정한 것으로 기존 코드와 다음이 다르다.
+	* landscape가 같아야 했기 때문에, 파일 형태로 저장되어 있는 landscape를 읽는 부분
+	* 적합도를 텐서플로우로 만든 딥러닝 모델을 통해 얻는 부분  
+	* 적합도를 웨카로 만든 머신러닝 모델(Support vector Regression)을 통해 얻는 부분
+	* (LR 모델을 로드하는 과정에서 에러를 수정하지 못해, 가중치를 곱해 적합도를 구해서 LR의 경우에는 
+	모델을 로드하지 않았다.)
+	* nk_create(), fitnessCheckForNK, fitnessCheck 등의 코드가 달라졌다. 기존의 Landscape를 불러와야 하는 부분이 존재하기 때문
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -87,6 +97,7 @@ void nk_create(NK* landscape)
 
 	else if(strcmp(TYPE,"NEXTDOOR")==0)
 		landscape->epi=NEXTDOOR;
+<<<<<<< HEAD:GA-Problems.c
 
     FILE* pFile = NULL;
     char str[200];
@@ -97,6 +108,9 @@ void nk_create(NK* landscape)
     */     
     pFile = fopen(str,"r");
 
+=======
+    
+>>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
 	landscape->Rand=(int**)malloc(sizeof(int*)*NK_N);
 	landscape->land=(double**)malloc(sizeof(double*)*NK_N);
 
@@ -106,7 +120,11 @@ void nk_create(NK* landscape)
 		landscape->Rand[i]=(int*)malloc(sizeof(int)*NK_K);
 	}
 
-    /* 이 부분이 임시로 추가된 부분 */
+
+	char str[200];
+   	sprintf(str, "../landscape/land%d_%d",NK_N,NK_K);
+    FILE* pFile = fopen(str,"r");
+	
     for(int a=0;a<NK_N;a++)
     {
         for(int b=0;b<pow*2;b++)
@@ -118,9 +136,13 @@ void nk_create(NK* landscape)
             fscanf(pFile,"%d",&landscape->Rand[a][b]);
     }
     fclose(pFile);
-    /* 이 부분이 임시로 추가된 부분 */
 
-    /*
+	/*
+	 * fitness approximation을 위해 추가된 부분 
+	 * landscape가 존재하는 적절한 경로를 설정해야 한다.
+	 * landscape는 GA_Problems를 통해 얻을 수 있다.
+    */
+	/*	
 	for(i=0;i<NK_N;i++)
 	{
 		for(j=0;j<pow*2;j++)
@@ -146,7 +168,7 @@ void nk_create(NK* landscape)
 			}
 		}
 	}
-    */
+	*/
     /* 파이썬 코드를 돌리기 위해 기존에 DNN 모델을 학습시킬 때 필요했던
     landscape를 불러오기 위해 주석 처리한 부분 */
     /* 만약 기존의 landscape를 필요하지 않고, 새로 만들어도 된다면 주석 부분을 적절히 
@@ -520,17 +542,35 @@ void fitnessCheckForNK(Fitness* generation,NK* landscape)
     memset(toParser,0,sizeof(toParser));
     if(lastGeneration == 1)
     {
-        for(int i=0;i<INDIVIDUAL;i++)
-            generation->fit[i] = nk_fitness(i,landscape);
+		for(int i=0;i<INDIVIDUAL;i++)
+    	{
+        	generation->fit[i]=nk_fitness(i,landscape);
+			sum+=generation->fit[i];
+
+			if(generation->fit[i]>ideal)
+			{
+				ideal=generation->fit[i];
+				indexOfIdeal=i;
+			}
+    	}
     }
+	/* 마지막 세대일 경우, 적합도를 기존의 방법으로 구해야 했다. */
     else
     {
+<<<<<<< HEAD:GA-Problems.c
         
 		//for(int i=0;i<INDIVIDUAL;i++)
 		//{
 			//generation->fit[i]=LR_royal_nk(i);
 		//}
         
+=======
+		/*
+		for(int i=0;i<INDIVIDUAL;i++)
+			generation->fit[i]=LR_royal_nk(i);
+		*/
+		/*
+>>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
 	    for(int i=0;i<INDIVIDUAL;i++)
 	    {
             for(int j=0;j<GENES;j++)
@@ -564,12 +604,17 @@ void fitnessCheckForNK(Fitness* generation,NK* landscape)
             fscanf(fp,"%lf",&generation->fit[i]);
         }
         fclose(fp);
+<<<<<<< HEAD:GA-Problems.c
     }
+=======
+		
+>>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
 	
-    for(int i=0;i<INDIVIDUAL;i++)
-    {
-        sum+=generation->fit[i];
+    	for(int i=0;i<INDIVIDUAL;i++)
+    	{
+        	sum+=generation->fit[i];
         
+<<<<<<< HEAD:GA-Problems.c
         if(generation->fit[i]>ideal)
         {
             ideal=generation->fit[i];
@@ -591,6 +636,33 @@ void fitnessCheckForNK(Fitness* generation,NK* landscape)
     }
     */
     /* ------------------------------------------------------------- */
+=======
+        	if(generation->fit[i]>ideal)
+        	{
+            	ideal=generation->fit[i];
+            	indexOfIdeal=i;
+        	}
+    	}
+		*/
+
+		/* 윗 부분의 코드는 텐서플로우 모델을 통해 적합도를 구해야 했기 때문에
+	 	 * 필요했던 부분, 기존의 landscape를 통해 적합도를 구하는 것은 아래의 코드를
+	 	 * 수행하면 된다. 
+	 	 */
+
+    	for(int i=0;i<INDIVIDUAL;i++)
+    	{
+        	generation->fit[i]=nk_fitness(i,landscape);
+			sum+=generation->fit[i];
+
+			if(generation->fit[i]>ideal)
+			{
+				ideal=generation->fit[i];
+				indexOfIdeal=i;
+			}
+    	}
+	}
+>>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
 	generation->ideal=ideal;
 	generation->average=(double)sum/INDIVIDUAL;
 	generation->indexOfIdeal=indexOfIdeal;
@@ -617,14 +689,10 @@ void resultToFile(Fitness gener[GENERATION],int num)
 	*/
 	fclose(fp);
 }
-
 /* 이 때의 num은 세대를 다 거치기 전 끝난 경우를 위한 변수 */
+
 int main(int argc,char** argv)
 {
-    float gap;
-    time_t start=0, end=0;
-    start=clock();
-
 	struct timeval t;
 	gettimeofday(&t,NULL);
 	srand(t.tv_usec * t.tv_sec * getpid());
@@ -635,24 +703,31 @@ int main(int argc,char** argv)
     NK_N=GENES;
 	LOCATION=(char*)malloc(sizeof(char)*30);
 	LOCATION=argv[3];
-
-    if(!strcmp(PROBLEM,"nk"))
+	/* 어떤 문제를 대상으로 유전 알고리즘을 수행할 것인가 */
+    /* 유전자의 개수를 입력받는다, NK_N은 유전자의 개수와 같은 의미 */
+	/* 최적해를 저장할 파일의 경로 */ 
+    
+	if(!strcmp(PROBLEM,"nk"))
     {
 	    TYPE=(char*)malloc(sizeof(char)*30);
 	    TYPE=argv[4];
         NK_K=atoi(argv[5]);
+		/* 문제 유형이 NK-Landscape일 경우, landscape type과 k를 요구 */
     }
 
    	int i, j, n;
 	population=(int**)malloc(sizeof(int*)*INDIVIDUAL);
 	next_population=(int**)malloc(sizeof(int*)*INDIVIDUAL);
 	
+<<<<<<< HEAD:GA-Problems.c
     for(i=0;i<INDIVIDUAL;i++)
+=======
+	for(i=0;i<INDIVIDUAL;i++)
+>>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
 	{
 		population[i]=(int*)malloc(sizeof(int)*GENES);
 		next_population[i]=(int*)malloc(sizeof(int)*GENES);
 	}
-
    	initialize();
 
    	Fitness* generation=(Fitness*)malloc(sizeof(Fitness)*GENERATION);
@@ -666,16 +741,17 @@ int main(int argc,char** argv)
     {
         if(i==GENERATION-1)
             lastGeneration = 1;
+		
 		if(!strcmp(PROBLEM,"nk"))
         {
             fitnessCheckForNK(&generation[i],landscape);
 	        /* NK_LANDSCAPE를 이용한 적합도 계산 함수 호출 */
-	        /*	
+			/*
             if(i==0)
 		    {
 			    FILE* fpp;
 			    char resultFile[200];
-			    sprintf(resultFile,"nk%d_%d",NK_N,NK_K);
+			    sprintf(resultFile,"land%d_%d",NK_N,NK_K);
 			    fpp = fopen(resultFile,"a+");
 			    for(int a=0;a<NK_N;a++)
 			    {
@@ -698,30 +774,38 @@ int main(int argc,char** argv)
 					    fprintf(fpp,"\n");
 				    fprintf(fpp,"%lf ",generation[0].fit[a]);
 			    }
+				fclose(fpp);
 		    }
-            */
-        }
+			*/
+			/* 첫 번째 NK_Landscape를 nk10_2의 형태로 파일을 만들고 저장 */
+        	
+		}
 		  
 		else
-		{
     	    fitnessCheck(&generation[i]);
-		}
-        /* One-Max, Royal Road, Decption, Random 적합도 계산을 위한 함수 호출 */
+        	/* One-Max, Royal Road, Decption 적합도 계산을 위한 함수 호출 */
 		int ideal_individuo = generation[i].indexOfIdeal;
 		double ideal_num = generation[i].ideal;
 
 		int k, l;
+<<<<<<< HEAD:GA-Problems.c
 		
 		//printf("%d Generation: \n", i + 1);
 		//k=ideal_individuo;
+=======
+	
+		/*
+		printf("%d Generation: \n", i + 1);
+		k=ideal_individuo;
+>>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
 
-		//for (l = 0; l < GENES; l++)
-			//printf("%d ", population[k][l]);
+		for (l = 0; l < GENES; l++)
+			printf("%d ", population[k][l]);
 
-		//printf("\n");
-	   	//printf("%lf", ideal_num);
-	   	//printf("\n");
-		
+		printf("\n");
+	   	printf("%lf", ideal_num);
+	   	printf("\n");
+		*/
 		/* 출력하는 부분 */
 
 		if (ideal_num == GENES)
@@ -818,8 +902,10 @@ int main(int argc,char** argv)
 	else
 		resultToFile(generation,i+1);
 	/* 파일에 결과를 출력 */
+	
 	if(!strcmp(PROBLEM,"nk"))
         nk_free(landscape);
+<<<<<<< HEAD:GA-Problems.c
 
     end = clock();
     //gap = (float)(end-start)/(CLOCKS_PER_SEC);
@@ -827,4 +913,6 @@ int main(int argc,char** argv)
     //fprintf(timeFile,"%f 시간 소요, %s-%d 문제 \n",gap,PROBLEM,GENES);
     //fclose(timeFile);
 
+=======
+>>>>>>> cc6a58e45099408d8c106a8d18d877806212e81b:GA-Problems.c
 }
